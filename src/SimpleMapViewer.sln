@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleMapViewer.Backend.Application", "SimpleMapViewer.Backend.Application\SimpleMapViewer.Backend.Application.csproj", "{9D3BE9F9-A3AC-458D-AA24-D5D981E481E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleMapViewer.Domain", "SimpleMapViewer.Domain\SimpleMapViewer.Domain.csproj", "{9A4EEBD9-217D-47AD-BA0C-048D96E1BAB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleMapViewer.Infrastructure", "SimpleMapViewer.Infrastructure\SimpleMapViewer.Infrastructure.csproj", "{81911B07-73A4-4136-B1D2-8C3B767558CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D3BE9F9-A3AC-458D-AA24-D5D981E481E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D3BE9F9-A3AC-458D-AA24-D5D981E481E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D3BE9F9-A3AC-458D-AA24-D5D981E481E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D3BE9F9-A3AC-458D-AA24-D5D981E481E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A4EEBD9-217D-47AD-BA0C-048D96E1BAB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A4EEBD9-217D-47AD-BA0C-048D96E1BAB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A4EEBD9-217D-47AD-BA0C-048D96E1BAB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A4EEBD9-217D-47AD-BA0C-048D96E1BAB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81911B07-73A4-4136-B1D2-8C3B767558CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81911B07-73A4-4136-B1D2-8C3B767558CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81911B07-73A4-4136-B1D2-8C3B767558CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81911B07-73A4-4136-B1D2-8C3B767558CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
