@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleMapViewer.Backend.Application.Common;
+using SimpleMapViewer.Backend.Application.Features.GeoFile.Commands.Dtos;
+using SimpleMapViewer.Backend.Application.Features.GeoFile.Commands.Share;
 using SimpleMapViewer.Backend.Application.Features.GeoFile.Queries.Dtos;
-using SimpleMapViewer.Backend.Application.Features.GeoFile.Queries.GetAll;
+using SimpleMapViewer.Backend.Application.Features.GeoFile.Queries.GetAllBy;
 
 namespace SimpleMapViewer.Backend.Application.Features.GeoFile {
     [Route("api/v1/")]
@@ -18,28 +20,48 @@ namespace SimpleMapViewer.Backend.Application.Features.GeoFile {
         public GeoFilesController(
             Func<object, ILifetimeScope> taggedLifetimeScopeFactory
         ) : base(taggedLifetimeScopeFactory) { }
-
-        [HttpGet("users/{UserId}/geofiles")]
-        public async Task<ActionResult<IList<GeoFileDto>>> GetAllAsync(
-            [FromRoute(Name = "UserId")] long userId
-        ) {
-            await using var unitOfWorkLifetimeScope = UnitOfWorkLifetimeScope;
-            var mediator = unitOfWorkLifetimeScope.Resolve<IMediator>();
-
-            var response = await mediator.Send(new GetAllRequest { UserId = userId});
-
-            return Ok(response.GeoFiles);
-        }
-
-        [HttpGet("users/{UserId}/geofiles/{FileId}")]
+        
+        [HttpGet("users/{UserId}/geofiles/{GeoFileId}")]
         public async Task<FileResult> GetByIdAsync(
             [FromRoute(Name = "UserId")] long userId,
-            [FromRoute(Name = "FileId")] long fileId
+            [FromRoute(Name = "GeoFileId")] long geoFileId
         ) {
             var fileStream = new FileStream(@"C:\ServerStorage\Files\1\jp_prefs.geojson", FileMode.Open);
             return new FileStreamResult(fileStream, "application/octet-stream") {
                 FileDownloadName = Path.GetFileName(fileStream.Name)
             };
+        }
+
+        [HttpGet("users/{UserId}/geofiles")]
+        public async Task<ActionResult<IList<GeoFileDto>>> GetAllByAsync(
+            [FromRoute(Name = "UserId")] long userId,
+            [FromQuery(Name = "shared")] bool isSharedRequested
+        ) {
+            await using var unitOfWorkLifetimeScope = OpenUnitOfWorkScoop();
+            var mediator = unitOfWorkLifetimeScope.Resolve<IMediator>();
+
+            var request = new GetAllByRequest {UserId = userId};
+            var response = await mediator.Send(request);
+
+            return Ok(response.GeoFiles);
+        }
+
+        [HttpPost("users/{UserId}/geofiles/{GeoFileId}/share")]
+        public async Task<ActionResult> ShareAsync(
+            [FromRoute(Name = "UserId")] long userId,
+            [FromRoute(Name = "GeoFileId")] long geoFileId,
+            [FromBody] ShareOptionsDto shareOptionsDto
+        ) {
+            await using var unitOfWorkLifetimeScope = OpenUnitOfWorkScoop();
+            var mediator = unitOfWorkLifetimeScope.Resolve<IMediator>();
+
+            await mediator.Send(new ShareRequest {
+                UserId = userId,
+                GeoFileId = geoFileId,
+                ShareOptions = shareOptionsDto
+            });
+
+            return Ok();
         }
 
         [HttpPost]

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using SimpleMapViewer.Backend.Application.Common.Constants;
 using SimpleMapViewer.Backend.Application.Features.Auth.AuthenticationHandlers;
 using SimpleMapViewer.Backend.Application.Features.Map;
+using SimpleMapViewer.Backend.Application.Features.Map.Hubs.MapHub;
 using SimpleMapViewer.Backend.Application.IoC;
 
 namespace SimpleMapViewer.Backend.Application {
@@ -105,6 +106,7 @@ namespace SimpleMapViewer.Backend.Application {
                     options.Filters.Add(authorizeFilter);
                     options.Filters.Add(new ProducesAttribute("application/json"));
                 })
+                .AddNewtonsoftJson()
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }

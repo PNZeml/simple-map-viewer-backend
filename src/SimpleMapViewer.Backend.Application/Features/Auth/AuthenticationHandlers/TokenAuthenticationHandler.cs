@@ -4,11 +4,14 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Autofac;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
+using SimpleMapViewer.Backend.Application.Features.Auth.Queries.GetUserByAccessToken;
+using SimpleMapViewer.Infrastructure.Constants;
 
 namespace SimpleMapViewer.Backend.Application.Features.Auth.AuthenticationHandlers {
     internal class TokenAuthenticationHandler :
@@ -35,7 +38,32 @@ namespace SimpleMapViewer.Backend.Application.Features.Auth.AuthenticationHandle
                 }
             }
 
+            if (!Guid.TryParse(accessToken, out var accessTokenGuid)) {
+                AuthFailResponse = AuthFailCause.InvalidToken;
+                return AuthenticateResult.Fail(AuthFailResponse.Message);
+            }
+
+            await using var unitOfWorkLifetimeScope = 
+                _taggedLifetimeScopeFactory(LifetimeScopeTags.UNIT_OF_WORK);
+            var mediator = unitOfWorkLifetimeScope.Resolve<IMediator>();
+            var request = new GetUserByAccessTokenRequest { AccessToken = accessTokenGuid };
+            var response = await mediator.Send(request);
+            var user = response.User;
+
+            if (user == null) {
+                AuthFailResponse = AuthFailCause.InvalidToken;
+                return AuthenticateResult.Fail(AuthFailResponse.Message);
+            }
+
             var identity = new ClaimsIdentity(Scheme.Name);
+            identity.AddClaim(new Claim(
+                nameof(Domain.Entities.User.Id),
+                user.Id.ToString()
+            ));
+            identity.AddClaim(new Claim(
+                nameof(Domain.Entities.User.AccessToken),
+                user.AccessToken
+            ));
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
 
@@ -72,16 +100,15 @@ namespace SimpleMapViewer.Backend.Application.Features.Auth.AuthenticationHandle
             public int Code { get; }
             public string Message { get; }
 
+            public static readonly AuthFailCause TokenIsNotProvided =
+                new AuthFailCause(0, "A token is not provided");
+            public static readonly AuthFailCause InvalidToken =
+                new AuthFailCause(1, "An invalid token");
+
             private AuthFailCause(int code, string message) {
                 Code = code;
                 Message = message;
             }
-
-            public static readonly AuthFailCause TokenIsNotProvided =
-                new AuthFailCause(0, "A token is not provided");
-
-            public static readonly AuthFailCause InvalidToken =
-                new AuthFailCause(1, "An invalid token");
         }
     }
 }

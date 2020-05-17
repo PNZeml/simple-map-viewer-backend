@@ -12,10 +12,10 @@ namespace SimpleMapViewer.Infrastructure.PipelineBehaviors {
         private static readonly UnitOfWorkRequiredAttribute UnitOfWorkRequiredAttribute =
             typeof(TRequest).GetCustomAttribute<UnitOfWorkRequiredAttribute>();
 
-        private readonly ILifetimeScope lifetimeScope;
+        private readonly ILifetimeScope _lifetimeScope;
 
         public UnitOfWorkBehavior(ILifetimeScope lifetimeScope) {
-            this.lifetimeScope = lifetimeScope;
+            _lifetimeScope = lifetimeScope;
         }
 
         public async Task<TResponse> Handle(
@@ -25,7 +25,7 @@ namespace SimpleMapViewer.Infrastructure.PipelineBehaviors {
         ) {
             if (UnitOfWorkRequiredAttribute == null) return await next();
 
-            var uow = lifetimeScope.Resolve<IUnitOfWork<ISession>>();
+            var uow = _lifetimeScope.Resolve<IUnitOfWork<ISession>>();
 
             if (uow.State == UnitOfWorkState.Ready) {
                 uow.Begin(UnitOfWorkRequiredAttribute.IsolationLevel);

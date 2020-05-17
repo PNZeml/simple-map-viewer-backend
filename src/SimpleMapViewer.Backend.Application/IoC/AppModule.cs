@@ -1,13 +1,14 @@
 ﻿using System;
 using Autofac;
 using Microsoft.Extensions.Configuration;
+using SimpleMapViewer.Backend.Application.Common.AvatarGenerator;
 
 namespace SimpleMapViewer.Backend.Application.IoC {
     internal class AppModule : Module {
-        private readonly IConfiguration configuration;
+        private readonly IConfiguration _configuration;
 
         public AppModule(IConfiguration configuration) {
-            this.configuration = configuration;
+            _configuration = configuration;
         }
         
         protected override void Load(ContainerBuilder builder) {
@@ -15,7 +16,11 @@ namespace SimpleMapViewer.Backend.Application.IoC {
             builder.RegisterModule<AutoMapperModule>();
             builder.RegisterModule<DatabaseModule>();
             builder.RegisterModule<MediatrModule>();
-            builder.RegisterModule(new SettingsModule(configuration));
+            builder.RegisterModule(new SettingsModule(_configuration));
+            // Common
+            builder
+                .RegisterInstance(AvatarGeneratorBuilder.Build(500))
+                .SingleInstance();
             // Lifetime factory
             builder
                 .Register<Func<object, ILifetimeScope>>(

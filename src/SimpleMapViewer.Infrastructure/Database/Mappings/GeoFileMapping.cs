@@ -4,17 +4,22 @@ using SimpleMapViewer.Domain.Entities;
 namespace SimpleMapViewer.Infrastructure.Database.Mappings {
     internal class GeoFileMapping : ClassMap<GeoFile> {
         public GeoFileMapping() {
-            Table("geo_files");
-            Id(x => x.Id).GeneratedBy.Increment();
+            Table("GEO_FILES");
+            Id(x => x.Id)
+                .GeneratedBy.Native("GEO_FILE_ID_SEQ");
             Map(x => x.Name)
                 .Not.Nullable();
-            Map(x => x.UploadDate)
-                .Column("upload_date")
+            Map(x => x.Created)
                 .Not.Nullable();
+            Map(x => x.Modified)
+                .Nullable();
+            Map(x => x.Opened)
+                .Nullable();
             Map(x => x.Size)
                 .Not.Nullable();
-            References(x => x.OwnerUser)
-                .Column("owner_user_id");
+            Map(x => x.IsDeleted)
+                .Column("IS_DELETED")
+                .Not.Nullable();
         }
     }
 }

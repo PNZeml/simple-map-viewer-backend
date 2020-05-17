@@ -8,13 +8,15 @@ namespace SimpleMapViewer.Backend.Application.Common {
     [Route("api/v1/[controller]s")]
     [Consumes("application/json")]
     public class ApiBaseController : ControllerBase {
-        protected ILifetimeScope UnitOfWorkLifetimeScope =>
-            _taggedLifetimeScopeFactory(LifetimeScopeTags.UNIT_OF_WORK);
-        
-        readonly Func<object, ILifetimeScope> _taggedLifetimeScopeFactory;
+        private readonly Func<object, ILifetimeScope> _taggedLifetimeScopeFactory;
 
         public ApiBaseController(Func<object, ILifetimeScope> taggedLifetimeScopeFactory) {
             _taggedLifetimeScopeFactory = taggedLifetimeScopeFactory;
+        }
+
+        [NonAction]
+        protected ILifetimeScope OpenUnitOfWorkScoop() {
+            return _taggedLifetimeScopeFactory(LifetimeScopeTags.UNIT_OF_WORK);
         }
     }
 }

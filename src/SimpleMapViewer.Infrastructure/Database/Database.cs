@@ -9,12 +9,12 @@ using SimpleMapViewer.Infrastructure.Settings;
 
 namespace SimpleMapViewer.Infrastructure.Database {
     public class Database : IDatabase<ISession>, IDisposable {
-        private readonly ISessionFactory sessionFactory;
+        private readonly ISessionFactory _sessionFactory;
 
         public Database(IDatabaseSettings databaseSettings) {
             var persistenceConfig = PostgreSQLConfiguration.Standard
                 .ConnectionString(x => x.Is(databaseSettings.ConnectionString));
-            sessionFactory = Fluently.Configure()
+            _sessionFactory = Fluently.Configure()
                 .Database(persistenceConfig)
                 .Mappings(mappingConfig =>
                     mappingConfig.FluentMappings
@@ -24,8 +24,8 @@ namespace SimpleMapViewer.Infrastructure.Database {
                 .BuildSessionFactory();
         }
 
-        public ISession CreateSource() => sessionFactory.OpenSession();
+        public ISession CreateSource() => _sessionFactory.OpenSession();
 
-        public void Dispose() => sessionFactory.Dispose();
+        public void Dispose() => _sessionFactory.Dispose();
     }
 }

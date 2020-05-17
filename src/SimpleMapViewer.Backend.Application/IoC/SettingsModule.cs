@@ -5,14 +5,14 @@ using SimpleMapViewer.Infrastructure.Settings;
 
 namespace SimpleMapViewer.Backend.Application.IoC {
     internal class SettingsModule : Module {
-        private readonly IConfiguration configuration;
+        private readonly IConfiguration _configuration;
 
         public SettingsModule(IConfiguration configuration) {
-            this.configuration = configuration;
+            _configuration = configuration;
         }
 
         protected override void Load(ContainerBuilder builder) {
-            var connectionString = configuration.GetSection("Database")["ConnectionString"];
+            var connectionString = _configuration.GetSection("Database")["ConnectionString"];
             var databaseSettings = new DatabaseSettings(connectionString);
             builder
                 .RegisterInstance(databaseSettings)
