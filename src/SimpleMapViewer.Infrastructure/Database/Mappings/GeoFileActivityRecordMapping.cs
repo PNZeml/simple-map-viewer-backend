@@ -18,6 +18,8 @@ namespace SimpleMapViewer.Infrastructure.Database.Mappings {
                 .Column("ACTIVITY_TYPE")
                 .CustomType<AccessType>()
                 .Not.Nullable();
+            Map(x => x.Occured)
+                .Not.Nullable();
             Map(x => x.IsDeleted)
                 .Column("IS_DELETED")
                 .Not.Nullable();

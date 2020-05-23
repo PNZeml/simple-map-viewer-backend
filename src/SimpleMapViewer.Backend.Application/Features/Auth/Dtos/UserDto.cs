@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimpleMapViewer.Backend.Application.Features.Auth.Dtos {
+﻿namespace SimpleMapViewer.Backend.Application.Features.Auth.Dtos {
     public class UserDto {
         public long Id { get; set; }
         public string Name { get; set; }

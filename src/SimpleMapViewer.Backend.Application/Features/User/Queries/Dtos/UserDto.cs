@@ -1,4 +1,4 @@
-﻿namespace SimpleMapViewer.Backend.Application.Features.User.Dtos {
+﻿namespace SimpleMapViewer.Backend.Application.Features.User.Queries.Dtos {
     public class UserDto {
         public long Id { get; set; }
         public string Name { get; set; }

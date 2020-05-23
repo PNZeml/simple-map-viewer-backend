@@ -55,6 +55,7 @@ create table geo_file_activity_records
     geo_file_id       bigint                              not null,
     user_id           bigint                              not null,
     activity_type     integer                             not null,
+    occured           timestamp                           not null,
     creating_datetime timestamp default CURRENT_TIMESTAMP not null,
     is_deleted        boolean   default false             not null
 );

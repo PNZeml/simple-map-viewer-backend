@@ -10,12 +10,12 @@ using Shura.Data;
 using SimpleMapViewer.Backend.Application.Features.Auth.Dtos;
 
 namespace SimpleMapViewer.Backend.Application.Features.Auth.Queries.SignIn {
-    internal class SignInRequestHandler : IRequestHandler<SignInRequest, SignInResponse> {
+    internal class SignInHandler : IRequestHandler<SignInRequest, SignInResponse> {
         private readonly ISession _session;
         private readonly IMapper _mapper;
         private readonly IPasswordHasher<Domain.Entities.User> _passwordHasher;
         
-        public SignInRequestHandler(IUnitOfWork<ISession> unitOfWork, IMapper mapper) {
+        public SignInHandler(IUnitOfWork<ISession> unitOfWork, IMapper mapper) {
             _session = unitOfWork.Source;
             _mapper = mapper;
             _passwordHasher = new PasswordHasher<Domain.Entities.User>();

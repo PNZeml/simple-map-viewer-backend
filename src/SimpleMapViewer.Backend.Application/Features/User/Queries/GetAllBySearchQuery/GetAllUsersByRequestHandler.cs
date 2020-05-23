@@ -7,11 +7,11 @@ using MediatR;
 using NHibernate;
 using NHibernate.Linq;
 using Shura.Data;
-using SimpleMapViewer.Backend.Application.Features.User.Dtos;
+using SimpleMapViewer.Backend.Application.Features.User.Queries.Dtos;
 
-namespace SimpleMapViewer.Backend.Application.Features.User.Queries.GetAllUsersBy {
+namespace SimpleMapViewer.Backend.Application.Features.User.Queries.GetAllBySearchQuery {
    internal class GetAllUsersByRequestHandler :
-       IRequestHandler<GetAllUsersByRequest, GetAllUsersByResponse> {
+       IRequestHandler<GetAllBySearchQueryRequest, GetAllBySearchQueryResponse> {
        private readonly ISession _session;
        private readonly IMapper _mapper;
 
@@ -20,11 +20,11 @@ namespace SimpleMapViewer.Backend.Application.Features.User.Queries.GetAllUsersB
            _mapper = mapper;
        }
 
-        public async Task<GetAllUsersByResponse> Handle(
-            GetAllUsersByRequest request,
+        public async Task<GetAllBySearchQueryResponse> Handle(
+            GetAllBySearchQueryRequest searchQueryRequest,
             CancellationToken cancellationToken
         ) {
-            var searchQuery = request.SearchQuery.ToLower().Trim();
+            var searchQuery = searchQueryRequest.SearchQuery.ToLower().Trim();
             var users = await _session.Query<Domain.Entities.User>()
                 .Where(x =>
                     x.Name.ToLower().Contains(searchQuery)
@@ -33,7 +33,7 @@ namespace SimpleMapViewer.Backend.Application.Features.User.Queries.GetAllUsersB
                 .Take(100)
                 .ToListAsync(cancellationToken);
             var userDtos = _mapper.Map<IList<UserDto>>(users);
-            return new GetAllUsersByResponse { Users = userDtos };
+            return new GetAllBySearchQueryResponse { Users = userDtos };
         }
     }
 }

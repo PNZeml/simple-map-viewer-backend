@@ -1,4 +1,5 @@
-﻿using Shura.Domain.Entities;
+﻿using System;
+using Shura.Domain.Entities;
 using SimpleMapViewer.Domain.Enums;
 
 namespace SimpleMapViewer.Domain.Entities {
@@ -7,5 +8,6 @@ namespace SimpleMapViewer.Domain.Entities {
         public virtual User User { get; set; }
         public virtual ActivityType ActivityType { get; set; }
         public virtual bool IsDeleted { get; set; }
+        public virtual DateTime Occured { get; set; }
     }
 }

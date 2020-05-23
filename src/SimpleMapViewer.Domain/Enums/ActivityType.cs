@@ -2,6 +2,7 @@
     public enum ActivityType {
         Created = 0,
         Shared = 1,
-        Edited = 2
+        Commented = 2,
+        Edited = 3
     }
 }

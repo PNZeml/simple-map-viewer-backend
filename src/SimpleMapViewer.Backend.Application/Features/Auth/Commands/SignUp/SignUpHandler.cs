@@ -10,13 +10,13 @@ using Shura.Data;
 using SimpleMapViewer.Backend.Application.Common.AvatarGenerator;
 
 namespace SimpleMapViewer.Backend.Application.Features.Auth.Commands.SignUp {
-    internal class SignUpRequestHandler : AsyncRequestHandler<SignUpRequest> {
+    internal class SignUpHandler : AsyncRequestHandler<SignUpRequest> {
         private readonly ISession _session;
         private readonly IMapper _mapper;
         private readonly AvatarGeneratorBuilder _avatarGeneratorBuilder;
         private readonly IPasswordHasher<Domain.Entities.User> _passwordHasher;
         
-        public SignUpRequestHandler(
+        public SignUpHandler(
             IUnitOfWork<ISession> unitOfWork,
             IMapper mapper,
             AvatarGeneratorBuilder avatarGeneratorBuilder

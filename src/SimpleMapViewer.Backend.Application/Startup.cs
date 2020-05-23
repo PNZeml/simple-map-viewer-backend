@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimpleMapViewer.Backend.Application.Common.Constants;
 using SimpleMapViewer.Backend.Application.Features.Auth.AuthenticationHandlers;
-using SimpleMapViewer.Backend.Application.Features.Map;
 using SimpleMapViewer.Backend.Application.Features.Map.Hubs.MapHub;
 using SimpleMapViewer.Backend.Application.IoC;
 
