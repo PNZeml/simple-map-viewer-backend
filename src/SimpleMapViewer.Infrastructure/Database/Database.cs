@@ -15,6 +15,9 @@ namespace SimpleMapViewer.Infrastructure.Database {
             var persistenceConfig = PostgreSQLConfiguration.Standard
                 .ConnectionString(x => x.Is(databaseSettings.ConnectionString));
             _sessionFactory = Fluently.Configure()
+                .ExposeConfiguration(config => {
+                    config.SetInterceptor(new DatabaseLoggerInterceptor());
+                })
                 .Database(persistenceConfig)
                 .Mappings(mappingConfig =>
                     mappingConfig.FluentMappings

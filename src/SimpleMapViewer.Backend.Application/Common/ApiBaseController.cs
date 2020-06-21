@@ -15,8 +15,7 @@ namespace SimpleMapViewer.Backend.Application.Common {
         }
 
         [NonAction]
-        protected ILifetimeScope OpenUnitOfWorkScoop() {
-            return _taggedLifetimeScopeFactory(LifetimeScopeTags.UNIT_OF_WORK);
-        }
+        protected ILifetimeScope OpenUnitOfWorkScoop() =>
+            _taggedLifetimeScopeFactory(LifetimeScopeTags.UNIT_OF_WORK);
     }
 }

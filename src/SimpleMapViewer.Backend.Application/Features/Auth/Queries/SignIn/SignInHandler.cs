@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
@@ -7,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using NHibernate;
 using NHibernate.Linq;
 using Shura.Data;
-using SimpleMapViewer.Backend.Application.Features.Auth.Dtos;
+using SimpleMapViewer.Backend.Application.Features.Auth.Queries.Dtos;
 
 namespace SimpleMapViewer.Backend.Application.Features.Auth.Queries.SignIn {
     internal class SignInHandler : IRequestHandler<SignInRequest, SignInResponse> {
@@ -31,16 +30,16 @@ namespace SimpleMapViewer.Backend.Application.Features.Auth.Queries.SignIn {
                     cancellationToken
                 );
             if (user == null) {
-                throw new ArgumentNullException();
+                return new SignInResponse { User = null };
             }
 
             var verificationResult =
                 _passwordHasher.VerifyHashedPassword(user, user.PasswordHashed, request.Password);
             if (verificationResult == PasswordVerificationResult.Failed) {
-                throw new ArgumentException(request.Password);
+                return new SignInResponse { User = null };
             }
 
-            var userDto = _mapper.Map<UserDto>(user);
+            var userDto = _mapper.Map<UserOutDto>(user);
             return new SignInResponse { User = userDto };
         }
     }

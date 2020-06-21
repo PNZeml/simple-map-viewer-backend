@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using MediatR;
-using NHibernate;
+using Microsoft.AspNetCore.Http;
 using Shura.Data;
+using SimpleMapViewer.Backend.Application.Common.Extensions;
 using SimpleMapViewer.Domain.Entities;
+using ISession = NHibernate.ISession;
 
 namespace SimpleMapViewer.Backend.Application.Features.GeoFile.Event.GeoFileActivityOccured {
     internal class CreateGeoFileActivityRecordHandler :
         INotificationHandler<GeoFileActivityOccuredNotification> {
         private readonly ISession _session;
-        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public CreateGeoFileActivityRecordHandler(
             IUnitOfWork<ISession> unitOfWork,
-            IMapper mapper
+            IHttpContextAccessor httpContextAccessor
         ) {
             _session = unitOfWork.Source;
-            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task Handle(
@@ -29,18 +30,18 @@ namespace SimpleMapViewer.Backend.Application.Features.GeoFile.Event.GeoFileActi
                 notification.GeoFileId,
                 cancellationToken
             );
+            var authUser = _httpContextAccessor.HttpContext.User.ToAuthUser();
             var user = await _session.GetAsync<Domain.Entities.User>(
-                notification.UserId,
+                authUser.Id,
                 cancellationToken
             );
-
-            var record = new GeoFileActivityRecord {
+            var geoFileActivityRecord = new GeoFileActivityRecord {
                 GeoFile = geoFile,
                 User = user,
                 ActivityType = notification.ActivityType,
-                Occured = DateTime.Now
+                Occurred = DateTime.Now
             };
-            await _session.SaveAsync(record);
+            await _session.SaveAsync(geoFileActivityRecord, cancellationToken);
         }
     }
 }

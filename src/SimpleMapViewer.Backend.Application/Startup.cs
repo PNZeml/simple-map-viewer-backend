@@ -1,4 +1,6 @@
+using System.Reflection;
 using Autofac;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -7,10 +9,13 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using SimpleMapViewer.Backend.Application.Common.Constants;
 using SimpleMapViewer.Backend.Application.Features.Auth.AuthenticationHandlers;
-using SimpleMapViewer.Backend.Application.Features.Map.Hubs.MapHub;
+using SimpleMapViewer.Backend.Application.Features.Map.Hub;
 using SimpleMapViewer.Backend.Application.IoC;
+using SimpleMapViewer.Backend.Application.Settings;
 
 namespace SimpleMapViewer.Backend.Application {
     public class Startup {
@@ -78,13 +83,17 @@ namespace SimpleMapViewer.Backend.Application {
             services.AddAuthorization(options => {
                 options.AddPolicy(AuthenticationSchemes.TOKEN_AUTH_SCHEMA, authorizationPolicy);
             });
+            // Misc
+            services.AddHttpContextAccessor();
         }
 
         private void ConfigureCors(IServiceCollection services) {
+            var appSettingsSection = _configuration.GetSection("App");
+            var appSettings = appSettingsSection.Get<AppSettings>();
             services.AddCors(options => {
                 options.AddPolicy("AllowAll", policyBuilder => {
                     policyBuilder
-                        .WithOrigins("http://192.168.0.102:8080")
+                        .WithOrigins(appSettings.AllowedOrigins)
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
@@ -94,7 +103,9 @@ namespace SimpleMapViewer.Backend.Application {
 
         private void ConfigureRoutingAndMvc(IServiceCollection services) {
             // SignalR
-            services.AddSignalR();
+            services.AddSignalR(x => {
+                x.EnableDetailedErrors = true;
+            });
             // Routing
             services.AddRouting(options => options.LowercaseUrls = true);
             // MVC
@@ -107,6 +118,10 @@ namespace SimpleMapViewer.Backend.Application {
                 })
                 .AddNewtonsoftJson()
                 .AddControllersAsServices()
+                .AddFluentValidation(x => {
+                    x.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+                    x.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
@@ -114,6 +129,18 @@ namespace SimpleMapViewer.Backend.Application {
             services.AddSwaggerDocument(swaggerConfig => {
                 swaggerConfig.Version = "v1";
                 swaggerConfig.DocumentName = "docs";
+                swaggerConfig.OperationProcessors.Add(new OperationSecurityScopeProcessor("Token"));
+                swaggerConfig.DocumentProcessors.Add(
+                    new SecurityDefinitionAppender(
+                        "Token",
+                        new OpenApiSecurityScheme {
+                            Type = OpenApiSecuritySchemeType.ApiKey,
+                            Name = "Authorization",
+                            Description = "Token authentication. Example: \"Token **TOKEN**\"",
+                            In = OpenApiSecurityApiKeyLocation.Header
+                        }
+                    )
+                );
             });
         }
     }

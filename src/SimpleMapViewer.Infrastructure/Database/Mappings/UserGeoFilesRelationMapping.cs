@@ -3,11 +3,11 @@ using SimpleMapViewer.Domain.Entities;
 using SimpleMapViewer.Domain.Enums;
 
 namespace SimpleMapViewer.Infrastructure.Database.Mappings {
-    internal class UserGeoFilesRelationMapping : ClassMap<UserGeoFilesRelation> {
+    internal class UserGeoFilesRelationMapping : ClassMap<UserGeoFileRelation> {
         public UserGeoFilesRelationMapping() {
             Table("USER_GEO_FILE_RELS");
             Id(x => x.Id)
-                .GeneratedBy.Native("USER_GEO_FILE_REL_ID_SEQ");
+                .GeneratedBy.Native("USER_GEO_FILE_RELS_ID_SEQ");
             References(x => x.User)
                 .Column("USER_ID")
                 .Not.Nullable();

@@ -1,7 +1,7 @@
-﻿using SimpleMapViewer.Backend.Application.Features.Auth.Dtos;
+﻿using SimpleMapViewer.Backend.Application.Features.Auth.Queries.Dtos;
 
 namespace SimpleMapViewer.Backend.Application.Features.Auth.Queries.SignIn {
-    public class SignInResponse {
-        public UserDto User { get; set; }
+    internal class SignInResponse {
+        public UserOutDto User { get; set; }
     }
 }

@@ -1,7 +1,7 @@
-﻿using SimpleMapViewer.Backend.Application.Features.Auth.Dtos;
+﻿using SimpleMapViewer.Backend.Application.Features.Auth.Queries.Dtos;
 
 namespace SimpleMapViewer.Backend.Application.Features.Auth.Queries.GetUserByAccessToken {
     internal class GetUserByAccessTokenResponse {
-        public UserDto User { get; set; }
+        public UserOutDto UserOut { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace SimpleMapViewer.Infrastructure.Database.Mappings {
         public GeoFileMapping() {
             Table("GEO_FILES");
             Id(x => x.Id)
-                .GeneratedBy.Native("GEO_FILE_ID_SEQ");
+                .GeneratedBy.Native("GEO_FILES_ID_SEQ");
             Map(x => x.Name)
                 .Not.Nullable();
             Map(x => x.Created)

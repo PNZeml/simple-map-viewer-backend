@@ -8,17 +8,20 @@ namespace SimpleMapViewer.Backend.Application.Common.Extensions {
         public static IEnumerable<Type> GetTypesOfInterface(
             this Assembly assembly,
             Type interfaceType
-        ) => assembly.GetTypes().Where(x => x.DoesImplementInterfaces(interfaceType));
+        ) {
+            var types = assembly.GetTypes();
+            return types.Where(x => x.DoesImplementInterfaces(interfaceType));
+        }
 
         public static bool DoesImplementInterfaces(
             this Type implementationType,
             params Type[] interfaceTypes
-        ) =>
-            implementationType
-                .GetInterfaces()
-                .Any(x =>
-                    x.IsGenericType && interfaceTypes.Contains(x.GetGenericTypeDefinition())
-                    || interfaceTypes.Contains(x)
-                );
+        ) {
+            var interfaces = implementationType.GetInterfaces();
+            return interfaces.Any(x =>
+                x.IsGenericType && interfaceTypes.Contains(x.GetGenericTypeDefinition())
+                || interfaceTypes.Contains(x)
+            );
+        }
     }
 }

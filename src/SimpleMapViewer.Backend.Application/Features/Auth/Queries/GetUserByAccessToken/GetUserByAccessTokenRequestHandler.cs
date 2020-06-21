@@ -5,7 +5,7 @@ using MediatR;
 using NHibernate;
 using NHibernate.Linq;
 using Shura.Data;
-using SimpleMapViewer.Backend.Application.Features.Auth.Dtos;
+using SimpleMapViewer.Backend.Application.Features.Auth.Queries.Dtos;
 
 namespace SimpleMapViewer.Backend.Application.Features.Auth.Queries.GetUserByAccessToken {
     internal class GetUserByAccessTokenRequestHandler :
@@ -31,12 +31,12 @@ namespace SimpleMapViewer.Backend.Application.Features.Auth.Queries.GetUserByAcc
                     cancellationToken
                 );
 
-            UserDto userDto = null;
+            UserOutDto userOutDto = null;
             if (user != null) {
-                userDto = _mapper.Map<UserDto>(user);
+                userOutDto = _mapper.Map<UserOutDto>(user);
             }
 
-            return new GetUserByAccessTokenResponse { User = userDto };
+            return new GetUserByAccessTokenResponse { UserOut = userOutDto };
         }
     }
 }

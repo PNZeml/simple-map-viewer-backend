@@ -2,6 +2,7 @@
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using SimpleMapViewer.Backend.Application.Common.AvatarGenerator;
+using SimpleMapViewer.Backend.Application.Features.Map.IoC;
 
 namespace SimpleMapViewer.Backend.Application.IoC {
     internal class AppModule : Module {
@@ -15,12 +16,15 @@ namespace SimpleMapViewer.Backend.Application.IoC {
             // Common modules
             builder.RegisterModule<AutoMapperModule>();
             builder.RegisterModule<DatabaseModule>();
-            builder.RegisterModule<MediatrModule>();
+            builder.RegisterModule<MediatorModule>();
+            builder.RegisterModule<ValidatorModule>();
             builder.RegisterModule(new SettingsModule(_configuration));
             // Common
             builder
                 .RegisterInstance(AvatarGeneratorBuilder.Build(500))
                 .SingleInstance();
+            // Features
+            builder.RegisterModule<MapModule>();
             // Lifetime factory
             builder
                 .Register<Func<object, ILifetimeScope>>(

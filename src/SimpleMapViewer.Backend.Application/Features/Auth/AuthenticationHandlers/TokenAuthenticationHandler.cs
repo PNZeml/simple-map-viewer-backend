@@ -48,7 +48,7 @@ namespace SimpleMapViewer.Backend.Application.Features.Auth.AuthenticationHandle
             var mediator = unitOfWorkLifetimeScope.Resolve<IMediator>();
             var request = new GetUserByAccessTokenRequest { AccessToken = accessTokenGuid };
             var response = await mediator.Send(request);
-            var user = response.User;
+            var user = response.UserOut;
 
             if (user == null) {
                 AuthFailResponse = AuthFailCause.InvalidToken;

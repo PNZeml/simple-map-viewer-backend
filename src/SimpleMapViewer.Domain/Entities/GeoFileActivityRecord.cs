@@ -8,6 +8,6 @@ namespace SimpleMapViewer.Domain.Entities {
         public virtual User User { get; set; }
         public virtual ActivityType ActivityType { get; set; }
         public virtual bool IsDeleted { get; set; }
-        public virtual DateTime Occured { get; set; }
+        public virtual DateTime Occurred { get; set; }
     }
 }

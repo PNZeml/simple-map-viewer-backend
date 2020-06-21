@@ -6,7 +6,7 @@ namespace SimpleMapViewer.Infrastructure.Database.Mappings {
         public UserMapping() {
             Table("USERS");
             Id(x => x.Id)
-                .GeneratedBy.Native("USER_ID_SEQ");
+                .GeneratedBy.Native("USERS_ID_SEQ");
             Map(x => x.Name)
                 .Not.Nullable();
             Map(x => x.Email)

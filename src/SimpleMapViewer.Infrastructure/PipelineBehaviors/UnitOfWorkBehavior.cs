@@ -1,9 +1,11 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using MediatR;
 using NHibernate;
+using Serilog;
 using Shura.Data;
 using SimpleMapViewer.Infrastructure.Attributes;
 
@@ -25,19 +27,25 @@ namespace SimpleMapViewer.Infrastructure.PipelineBehaviors {
         ) {
             if (UnitOfWorkRequiredAttribute == null) return await next();
 
-            var uow = _lifetimeScope.Resolve<IUnitOfWork<ISession>>();
+            var unitOfWork = _lifetimeScope.Resolve<IUnitOfWork<ISession>>();
 
-            if (uow.State == UnitOfWorkState.Ready) {
-                uow.Begin(UnitOfWorkRequiredAttribute.IsolationLevel);
+            if (unitOfWork.State == UnitOfWorkState.Ready) {
+                unitOfWork.Begin(UnitOfWorkRequiredAttribute.IsolationLevel);
             }
 
-            var response = await next();
+            try {
+                var response = await next();
 
-            if (uow.State == UnitOfWorkState.Begun) {
-                await uow.CommitAsync();
+                if (unitOfWork.State == UnitOfWorkState.Begun) {
+                    await unitOfWork.CommitAsync();
+                }
+
+                return response;
+            } catch (Exception exception) {
+                await unitOfWork.RollbackAsync();
+                Log.Error(exception, "An error occured during unit of work execution");
+                throw;
             }
-
-            return response;
         }
     }
 }
